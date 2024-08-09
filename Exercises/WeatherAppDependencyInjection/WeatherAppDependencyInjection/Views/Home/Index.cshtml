@@ -1,0 +1,25 @@
+﻿@{
+    var divClass = string.Empty;
+}
+
+<div class="flex">
+    @foreach (var city in Model)
+    {
+        if (city.TemperatureFahrenheit < 44) { divClass = "blue-back"; }
+        if (city.TemperatureFahrenheit >= 44 && city.TemperatureFahrenheit <= 74) { divClass = "green-back"; }
+        if (city.TemperatureFahrenheit > 74) { divClass = "orange-back"; }
+
+        <div class="box @divClass">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>@city.CityName</td>
+                        <td>@city.DateAndTime.TimeOfDay</td>
+                        <td>@city.TemperatureFahrenheit °F</td>
+                        <td><a href="/weather/@city.CityUniqueCode">Details</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

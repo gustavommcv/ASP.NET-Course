@@ -1,0 +1,24 @@
+﻿@model CityWeather
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.CityName Weather</title>
+    <link rel="stylesheet" type="text/css" href="~/css/style.css">
+</head>
+<body>
+    <h1>Weather</h1>
+    <div class="box">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>@Model.CityName</td>
+                    <td>@Model.DateAndTime</td>
+                    <td>@Model.TemperatureFahrenheit °F</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <a href="/home">Back to Weather Home Page</a>
+</body>
+</html>

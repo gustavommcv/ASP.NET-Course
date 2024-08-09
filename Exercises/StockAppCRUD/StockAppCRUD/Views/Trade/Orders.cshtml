@@ -1,0 +1,33 @@
+﻿@model Orders
+
+<div class="orders-container flex">
+    <!-- Buy Orders List -->
+    <div id="buy-orders-list" class="flex-1 order-list">
+        <h3>Buy Orders</h3>
+        @foreach (var order in Model.BuyOrders)
+        {
+            <div class="order-item">
+                <h4>@order.StockName (@order.StockSymbol)</h4>
+                <p>@order.Quantity shares at <span class="stock-price">@order.Price</span></p>
+                <p>Trade Amount: <span class="trade-amount">@order.TradeAmount</span></p>
+                <p>@order.DateAndTimeOfOrder.ToString("dd MMMM yyyy hh:mm:ss tt")</p>
+                <hr />
+            </div>
+        }
+    </div>
+
+    <!-- Sell Orders List -->
+    <div id="sell-orders-list" class="flex-1 order-list">
+        <h3>Sell Orders</h3>
+        @foreach (var order in Model.SellOrders)
+        {
+            <div class="order-item">
+                <h4>@order.StockName (@order.StockSymbol)</h4>
+                <p>@order.Quantity shares at <span class="stock-price">@order.Price</span></p>
+                <p>Trade Amount: <span class="trade-amount">@order.TradeAmount</span></p>
+                <p>@order.DateAndTimeOfOrder.ToString("dd MMMM yyyy hh:mm:ss tt")</p>
+                <hr />
+            </div>
+        }
+    </div>
+</div>

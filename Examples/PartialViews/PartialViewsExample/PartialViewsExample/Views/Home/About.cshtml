@@ -1,0 +1,33 @@
+﻿<h1>About</h1>
+
+@* @{
+    var myViewData = new ViewDataDictionary(ViewData);
+    myViewData["ListTitle"] = "Countries";
+    myViewData["ListItems"] = new List<string>()
+    {
+        "USA",
+        "India",
+        "Brasil",
+        "Canada"
+    };
+    
+    //await Html.RenderPartialAsync("_ListPartialView");
+}
+*@
+
+@{
+    ListModel listModel = new ListModel();
+    listModel.ListTitle = "Countries";
+    listModel.ListItems = new List<string>()
+    {
+        "USA",
+        "India",
+        "Brasil",
+        "Canada"
+    };
+}
+
+@* <partial name="_ListPartialView" view-data="myViewData" /> *@
+
+<partial name="_ListPartialView" model="listModel"></partial>
+

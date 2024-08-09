@@ -1,0 +1,88 @@
+﻿@model StockTrade
+
+@{
+    var token = ViewData["token"] as string;
+}
+
+<div class="box trading-panel">
+    <div class="flex trading-panel-flex">
+        <div id="stock-price-panel">
+            <div class="stock">
+                <h1 class="stock-title">@Model.StockName (@Model.StockSymbol)</h1>
+                <h1>$ <span id="stock-price">@Model.Price</span></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden element for stock symbol -->
+<input type="hidden" id="stock-symbol" value="@Model.StockSymbol" />
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const stockSymbol = document.getElementById('stock-symbol').value;
+        const stockPriceElement = document.getElementById('stock-price');
+        const token = '@token'; // Correctly inject the token as a string
+
+        let ws;
+
+        function connectWebSocket() {
+            ws = new WebSocket(`wss://ws.finnhub.io?token=${token}`);
+
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                // Subscribe to the stock symbol
+                ws.send(JSON.stringify({ type: 'subscribe', symbol: stockSymbol }));
+            };
+
+            ws.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                if (message.type === 'trade' && message.data.length > 0) {
+                    // Extract the highest price from the trades
+                    const highestPrice = Math.max(...message.data.map(trade => trade.p));
+                    // Update the UI with the highest price
+                    stockPriceElement.textContent = highestPrice.toFixed(2);
+                }
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        function disconnectWebSocket() {
+            if (ws) {
+                ws.send(JSON.stringify({ type: 'unsubscribe', symbol: stockSymbol }));
+                ws.close();
+            }
+        }
+
+        // Connect to WebSocket
+        connectWebSocket();
+
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            disconnectWebSocket();
+        });
+
+        // Function to check if the market is open
+        function isMarketOpen() {
+            const now = new Date();
+            const day = now.getDay();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            return (day >= 1 && day <= 5) && (hours >= 9 && hours < 16);
+        }
+
+        // Update price only when the market is open
+        setInterval(() => {
+            if (isMarketOpen()) {
+                connectWebSocket();
+            }
+        }, 2000); // Check every 2 seconds
+    });
+</script>

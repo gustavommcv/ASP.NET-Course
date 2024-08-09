@@ -1,0 +1,39 @@
+﻿@model Person
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>@ViewBag.appTitle</title>
+        <meta charset="utf-8" />
+    </head> 
+    <body>
+        <h1>Persons</h1>
+        <h2>Hello @Model.Name</h2>
+        @if (Model.DateOfBirth.HasValue)
+        {
+            double age = Math.Round((DateTime.Now - Model.DateOfBirth).Value.TotalDays / 365.25);
+            <h3>@age years old</h3>
+        } else
+        {
+            <h3>Date of birth unkown</h3>
+        }
+
+        @switch(Model.Gender)
+        {
+            case Gender.Male:
+                <p>November 19 is International Men's Day</p>
+                ;
+                break;
+            case Gender.Female:
+                <p>March 8 is International Women's Day</p>
+                ;
+                break;
+             case Gender.Other:
+                <p>March 8 is International Women's Day</p>
+                ;
+                break;
+        }
+    <a href="/person-details/@Model.Name">Details</a>
+    <a href="/person-with-product">Person with Product</a>
+    </body>
+</html>
