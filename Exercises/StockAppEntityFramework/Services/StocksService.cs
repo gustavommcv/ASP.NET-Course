@@ -1,4 +1,4 @@
-﻿using Entities;
+﻿using Entities.Data;
 using Service_Contracts;
 using Services.DTO;
 using Services.Extensions;
@@ -8,13 +8,11 @@ namespace Services
 {
     public class StocksService : IStocksService
     {
-        private readonly List<BuyOrder> _orders;
-        private readonly List<SellOrder> _sellOrders;
+        private readonly OrderContext _context;
 
-        public StocksService()
+        public StocksService(OrderContext context)
         {
-            _orders = new List<BuyOrder>();
-            _sellOrders = new List<SellOrder>();
+            _context = context;
         }
 
         // CreateBuyOrder: Inserts a new buy order into the database table called 'BuyOrders'.
@@ -26,7 +24,8 @@ namespace Services
 
             var buyOrder = buyOrderRequest.ToBuyOrderType();
 
-            _orders.Add(buyOrder);
+            _context.BuyOrders.Add(buyOrder);
+            _context.SaveChanges();
 
             var buyOrderResponse = buyOrder.ToResponse();
 
@@ -43,7 +42,8 @@ namespace Services
             var sellOrder = sellOrderRequest.ToSellOrderType();
 
             var sellOrderResponse = sellOrder.ToResponse();
-            _sellOrders.Add(sellOrder);
+            _context.SellOrders.Add(sellOrder);
+            _context.SaveChanges();
 
             return Task.FromResult(sellOrderResponse);
         }
@@ -51,7 +51,7 @@ namespace Services
         // GetBuyOrders: Returns the existing list of buy orders retrieved from database table called 'BuyOrders'.
         public Task<List<BuyOrderResponse>> GetBuyOrders()
         {
-            var responseList = _orders.Select(o => o.ToResponse()).ToList();
+            var responseList = _context.BuyOrders.Select(o => o.ToResponse()).ToList();
 
             return Task.FromResult(responseList);
         }
@@ -59,7 +59,7 @@ namespace Services
         // GetSellOrders: Returns the existing list of sell orders retrieved from database table called 'SellOrders'.
         public Task<List<SellOrderResponse>> GetSellOrders()
         {
-            var responseList = _sellOrders.Select(s => s.ToResponse()).ToList();
+            var responseList = _context.SellOrders.Select(s => s.ToResponse()).ToList();
 
             return Task.FromResult(responseList);
         }
