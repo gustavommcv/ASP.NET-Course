@@ -1,0 +1,83 @@
+﻿@model Orders
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #d4e9d4;
+            padding: 12px;
+            text-align: left;
+            font-size: 16px;
+        }
+        td {
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Orders</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date and Time</th>
+                <th>Stock</th>
+                <th>Order Type</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Trade Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.BuyOrders)
+            {
+                <tr>
+                    <td>@order.DateAndTimeOfOrder.ToString("dd MMMM yyyy hh:mm:ss tt")</td>
+                    <td>@order.StockName (@order.StockSymbol)</td>
+                    <td>BuyOrder</td>
+                    <td>@order.Quantity</td>
+                    <td>$ @order.Price.ToString("F2")</td>
+                    <td>@order.TradeAmount.ToString("N2")</td>
+                </tr>
+            }
+
+            @foreach (var order in Model.SellOrders)
+            {
+                <tr>
+                    <td>@order.DateAndTimeOfOrder.ToString("dd MMMM yyyy hh:mm:ss tt")</td>
+                    <td>@order.StockName (@order.StockSymbol)</td>
+                    <td>SellOrder</td>
+                    <td>@order.Quantity</td>
+                    <td>$ @order.Price.ToString("F2")</td>
+                    <td>@order.TradeAmount.ToString("N2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

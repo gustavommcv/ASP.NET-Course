@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Rotativa.AspNetCore;
 using Service_Contracts;
 using Services.DTO;
 using Services.Utilities;
@@ -115,7 +116,21 @@ namespace StockAppEntityFramework.Controllers
         [Route("[action]")]
         public async Task<IActionResult> OrdersPDF()
         {
-            throw new NotImplementedException();
+            var buyOrders = await _stocksService.GetBuyOrders();
+            var sellOrders = await _stocksService.GetSellOrders();
+
+            var orders = new Orders();
+            orders.BuyOrders = buyOrders;
+            orders.SellOrders = sellOrders;
+
+            // Return view as pdf
+            return new ViewAsPdf("OrdersPDF", orders)
+            {
+                FileName = "OrdersReport.pdf",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+            };
+
         }
     }
 }
